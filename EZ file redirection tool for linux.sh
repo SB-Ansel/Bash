@@ -24,9 +24,9 @@ function named.options(){
 function open.cheese.db(){
         nano /etc/bind/zones/cheese.db
 }
-# infinite loop
-#while true
-#do
+# infinite menu loop
+while true
+do
 dialog --clear --help-button --backtitle "EZ file redirection tool for Linux" \
 --title "[Main Menu]" \
 --menu "You can use the UP/DOWN arrow keys\n\
@@ -42,7 +42,7 @@ case $menuitem in
         Local) named.local;;
         Options) named.options;;
         Cheese.db) open.cheese.db;;
-        Exit) echo "Bye";break;;
+        Exit) echo "Goodbye Anon! and thankyou for using Script Tec";break;;
 esac
 
 done
