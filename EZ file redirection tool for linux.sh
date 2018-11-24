@@ -11,23 +11,27 @@ function display_output(){
         local h=${1-10}           # box height default 10
         local w=${2-41}         # box width default 41
         local t=${3-Output}     # box title
-        dialog --backtitle "EZ file redirection agent" --title "${t}" --clear --msgbo$
+        dialog --backtitle "EZ file redirection agent" --title "${t}" --clear --msgbox
 }
-function named.local(){
+function Open_Named_Local(){
         nano /etc/bind/named.conf.local
 }
-
-function named.options(){
+function Open_Named_Options(){
         nano /etc/bind/named.conf.options
 }
-function open.cheese.db(){
+function Open_Zone_File(){
         nano /etc/bind/zones/cheese.db
 }
-
-function service.bind9(){
-        output=$(OUTPUT) # actually doesn't matter what is here
+function BIND9_Service_Status(){
+        output=$(OUTPUT)
         service bind9 status | grep -i running > "$OUTPUT"
-        dialog --textbox "$OUTPUT" 0 0
+        dialog --backtitle "EZ file redirection agent" --title "BIND9 Service Status" --textbox "$OUTPUT" 0 0
+        #service bind9 status | grep -i running
+}
+function BIND9_Configuration_Check(){
+        output=$(OUTPUT)
+        named-checkzone cheese.pingu.me.uk /etc/bind/zones/cheese.db | less  > "$OUTPUT"
+        dialog --backtitle "EZ file redirection agent" --title "BIND9 Configuration Check" --textbox "$OUTPUT" 0 0
 }
 # infinite loop
 while true
@@ -35,21 +39,23 @@ do
 dialog --clear --nocancel --backtitle "EZ file redirection agent" \
 --title "[Main Menu]" \
 --menu "You can use the UP/DOWN arrow keys\n\
-Choose the TASK" 15 52 5 \
-Local "Opens named.conf.local." \
-Options "Opens named.conf.options." \
-Cheese.db "Opens cheeseZone.db." \
-Service "Check to see if bind9 is running." \
-Exit "Exit to the shell" 2>"${INPUT}"
+Choose the TASK" 15 100 0 \
+Open.Named.Local "Opens named.conf.local in nano." \
+Open.Named.Options "Opens named.conf.options in nano." \
+Open.Zone.File "Opens file cheese.db in nano." \
+Check.BIND.Services "Check to see if BIND9 is running." \
+Check.BIND.Configuration "Runs a check to see if BIND9 is configured correctly." \
+Exit "Exits agent." 2>"${INPUT}"
 
 menuitem=$(<"${INPUT}")
 
 case $menuitem in
-        Local) named.local;;
-        Options) named.options;;
-        Cheese.db) open.cheese.db;;
-        Service) service.bind9;;
-        Exit) echo "Goodbye Anon!";break;;
+        Open.Named.Local) Open_Named_Local;;
+        Open.Named.Options) Open_Named_Options;;
+        Open.Zone.File) Open_Zone_File;;
+        Check.BIND.Services) BIND9_Service_Status;;
+        Check.BIND.Configuration) BIND9_Configuration_Check;;
+        Exit) echo "Goodbye Anon! and thank you for using EZ File redirection agent!";break;;
 esac
 
 done
