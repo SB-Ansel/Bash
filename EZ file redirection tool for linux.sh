@@ -8,7 +8,7 @@ vi_editor=${EDITOR-vi}
 # trap and delete temp files
 trap "rm $OUTPUT; rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 function display_output(){
-        local h=${1-10}           # box height default 10
+        local h=${1-10}         # box height default 10
         local w=${2-41}         # box width default 41
         local t=${3-Output}     # box title
         dialog --backtitle "EZ file redirection agent" --title "${t}" --clear --msgbox
@@ -60,7 +60,7 @@ esac
 
 done
 # if temp files found, delete em
-[ -f $OUTPUT ] && rm $OUTPUT
+[ -f $OUTPUT ] && rm $OUTPUT #Bam - "Why not have your output files routed to dev/null...", Jake - "Because Bam! this is cooler"
 [ -f $INPUT ] && rm $INPUT
 
 
